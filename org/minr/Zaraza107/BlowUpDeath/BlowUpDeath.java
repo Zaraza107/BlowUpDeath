@@ -29,6 +29,7 @@ public class BlowUpDeath extends JavaPlugin {
     public PermissionHandler Permissions;
     public iProperty settings;
     public boolean enable;
+    public boolean permissionsEnabled;
     public float explosionPower;
 
     public BlowUpDeath(PluginLoader pluginLoader, Server instance,
@@ -45,8 +46,7 @@ public class BlowUpDeath extends JavaPlugin {
         
         PluginDescriptionFile pdfFile = this.getDescription();
         System.out.println( "[" + pdfFile.getName() + "] (version " + pdfFile.getVersion() + ") is enabled!" );
-        
-        setupPermissions();
+
         setupSettings();
     }
     
@@ -73,9 +73,10 @@ public class BlowUpDeath extends JavaPlugin {
             if (test != null) {
                 this.Permissions = ((Permissions)test).getHandler();
                 System.out.println("[BlowUpDeath]" + " Permission system enabled.");
+                permissionsEnabled = true;
             } else {
-                System.out.println("[BlowUpDeath]" + " Permission system not enabled. Disabling plugin.");
-                this.getServer().getPluginManager().disablePlugin(this);
+                System.out.println("[BlowUpDeath]" + " was unable to enable Permissions system.");
+                permissionsEnabled = false;
             }
         }
     }
@@ -86,7 +87,11 @@ public class BlowUpDeath extends JavaPlugin {
     	settings = new iProperty(path + "BlowUpDeath.settings");
     	enable = settings.getBoolean("enable-plugin", true);
     	explosionPower = settings.getFloat("explosion-power", 4F);
-    	
+    	boolean perm = settings.getBoolean("enable-permissions", true);
+    	if(perm)
+    		setupPermissions();
+    	else
+    		permissionsEnabled = false;
     }
 }
 

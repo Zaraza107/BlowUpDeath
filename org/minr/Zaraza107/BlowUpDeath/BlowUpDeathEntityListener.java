@@ -18,7 +18,7 @@ public class BlowUpDeathEntityListener extends EntityListener{
     public void onEntityDeath(EntityDeathEvent event) {
     	if(plugin.enable && event.getEntity() instanceof Player) {
     		Player player = (Player)event.getEntity();
-    		if(plugin.Permissions.has(player, "blow.up.death")) {
+    		if(!plugin.permissionsEnabled || plugin.Permissions.has(player, "blow.up.death")) {
     			try {
     				CraftWorld w = (CraftWorld)player.getWorld();
     				Field f = CraftWorld.class.getDeclaredField("world");
