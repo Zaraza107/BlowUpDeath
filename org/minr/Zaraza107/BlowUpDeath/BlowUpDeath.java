@@ -29,19 +29,21 @@ public class BlowUpDeath extends JavaPlugin {
     public PermissionHandler Permissions;
     public iProperty settings;
     public boolean enable;
+    public boolean explode;
+    public boolean spawnMob;
     public boolean permissionsEnabled;
     public float explosionPower;
+    public String mobSpawned;
+    public int mobAmount;
 
-    public BlowUpDeath(PluginLoader pluginLoader, Server instance,
-            PluginDescriptionFile desc, File folder, File plugin,
-            ClassLoader cLoader) throws IOException {
-        super(pluginLoader, instance, desc, folder, plugin, cLoader);
+    public BlowUpDeath() {
 
-        server = instance;
     }
     
     public void onEnable() {
-        PluginManager pm = getServer().getPluginManager();
+    	server = getServer();
+    	
+        PluginManager pm = server.getPluginManager();
         pm.registerEvent(Event.Type.ENTITY_DEATH, ((Listener) (entityListener)), Event.Priority.Monitor, ((Plugin) (this)));
         
         PluginDescriptionFile pdfFile = this.getDescription();
@@ -85,8 +87,15 @@ public class BlowUpDeath extends JavaPlugin {
     	String path = "plugins" + File.separator;
     	
     	settings = new iProperty(path + "BlowUpDeath.settings");
+    	
     	enable = settings.getBoolean("enable-plugin", true);
+    	if(!enable)
+    		getServer().getPluginManager().disablePlugin(this);
+    	explode = settings.getBoolean("explode-on-death", true);
     	explosionPower = settings.getFloat("explosion-power", 4F);
+    	//spawnMob = settings.getBoolean("spawn-mobs-on-death", false);
+    	//mobSpawned = settings.getString("spawned-mob", "creeper");
+    	//mobAmount = settings.getInt("amount-of-mobs", 1);
     	boolean perm = settings.getBoolean("enable-permissions", true);
     	if(perm)
     		setupPermissions();
